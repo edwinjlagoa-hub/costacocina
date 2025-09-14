@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Get the current URL and replace index.html with menu.html
-        const currentUrl = window.location.href;
-        const menuUrl = currentUrl.replace('index.html', 'menu.html');
+        // Use the GitHub Pages URL
+        const menuUrl = 'https://lacostacocina.com/menu.html';
         
         // Get the QR code container
         const qrcodeContainer = document.getElementById("qrcode");
