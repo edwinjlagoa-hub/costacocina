@@ -1,0 +1,12 @@
+name: Costa Cocina Menu
+title: Costa Cocina Menu
+description: Digital menu for Costa Cocina restaurant
+baseurl: "/costacocina"
+url: "https://edwinjlagoa-hub.github.io"
+
+# Build settings
+markdown: kramdown
+exclude:
+  - .git/
+  - .github/
+  - README.md
