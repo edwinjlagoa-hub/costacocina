@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     try {
         // Use the GitHub Pages URL
-        const menuUrl = 'https://edwinjlagoa-hub.github.io/costacocina/menu.html';
+        const menuUrl = 'https://edwinjlagoa-hub.github.io/lacostacocina/menu.html';
         
         // Get the QR code container
         const qrcodeContainer = document.getElementById("qrcode");
