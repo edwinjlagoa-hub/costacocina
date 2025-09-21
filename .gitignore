@@ -2,3 +2,16 @@
 node_modules/
 *.log
 .vscode/
+
+# Jekyll build files
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
