@@ -18,6 +18,9 @@ concurrency:
 jobs:
   build-and-deploy-staging:
     runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://stage.lacostacocina.com
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
@@ -34,6 +37,12 @@ jobs:
           echo "staging: true" >> _config_staging.yml
           echo "environment: staging" >> _config_staging.yml
           echo "show_staging_banner: true" >> _config_staging.yml
+          echo "url: \"https://stage.lacostacocina.com\"" >> _config_staging.yml
+          echo "baseurl: \"\"" >> _config_staging.yml
+
+      - name: Create CNAME for staging subdomain
+        run: |
+          echo "stage.lacostacocina.com" > CNAME
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -58,6 +67,10 @@ jobs:
         env:
           JEKYLL_ENV: staging
 
+      - name: Copy CNAME to build directory
+        run: |
+          cp CNAME ./_site/
+
       - name: Deploy to staging branch
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -68,18 +81,18 @@ jobs:
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Deploy staging: ${{ github.event.head_commit.message }}'
+          cname: stage.lacostacocina.com
 
       - name: Display staging info
         run: |
           echo "✅ Staging deployment completed!"
           echo ""
-          echo "� Access your staging site:"
+          echo "🔗 Access your staging site:"
+          echo "   URL: https://stage.lacostacocina.com"
           echo "   Branch: staging-site"
           echo "   Files: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
           echo ""
-          echo "📝 To view the site, you can:"
-          echo "   1. Download the staging-site branch files"
-          echo "   2. Serve locally with: python -m http.server 8000"
-          echo "   3. Or enable GitHub Pages for staging-site branch"
+          echo "📝 DNS Configuration needed:"
+          echo "   Add CNAME record: stage.lacostacocina.com → edwinjlagoa-hub.github.io"
           echo ""
-          echo "� Latest commit: ${{ github.sha }}"
+          echo "🚀 Latest commit: ${{ github.sha }}"
