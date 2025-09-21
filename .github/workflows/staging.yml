@@ -79,17 +79,31 @@ jobs:
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Deploy staging: ${{ github.event.head_commit.message }}'
           cname: stage.lacostacocina.com
+          
+      - name: Enable Pages for staging branch
+        run: |
+          echo "✅ Staging files deployed to staging-site branch"
+          echo "🔗 Access via: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
+          echo "⚠️  Note: GitHub Pages can only serve one branch at a time per repository"
+          echo "📝 To access staging, temporarily enable Pages from staging-site branch in repository settings"
 
       - name: Display staging info
         run: |
           echo "✅ Staging deployment completed!"
           echo ""
-          echo "🔗 Access your staging site:"
-          echo "   URL: https://stage.lacostacocina.com"
-          echo "   Branch: staging-site"
-          echo "   Files: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
+          echo "🔗 Staging branch: staging-site"
+          echo "📁 Files: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
           echo ""
-          echo "📝 DNS Configuration needed:"
-          echo "   Add CNAME record: stage.lacostacocina.com → edwinjlagoa-hub.github.io"
+          echo "⚠️  GitHub Pages Limitation:"
+          echo "   GitHub Pages can only serve one branch per repository"
+          echo "   Currently serving production from main branch"
           echo ""
+          echo "🔧 To access staging at https://stage.lacostacocina.com:"
+          echo "   1. Go to repository Settings → Pages"
+          echo "   2. Change source from 'GitHub Actions' to 'Deploy from branch'"
+          echo "   3. Select 'staging-site' branch"
+          echo "   4. Wait 2-3 minutes for deployment"
+          echo "   5. Visit https://stage.lacostacocina.com"
+          echo ""
+          echo "📝 Alternative: Use local testing with ./staging-access.sh serve"
           echo "🚀 Latest commit: ${{ github.sha }}"
