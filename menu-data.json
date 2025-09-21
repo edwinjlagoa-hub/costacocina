@@ -1,0 +1,64 @@
+{
+    "categories": [
+        {
+            "name": "Appetizers",
+            "items": [
+                {
+                    "name": "Garlic Bread",
+                    "price": 5.99,
+                    "description": "Fresh bread toasted with garlic butter and herbs"
+                },
+                {
+                    "name": "Bruschetta",
+                    "price": 7.99,
+                    "description": "Toasted bread topped with fresh tomatoes, garlic, and basil"
+                },
+                {
+                    "name": "Soup of the Day",
+                    "price": 6.99,
+                    "description": "Ask your server for today's selection"
+                }
+            ]
+        },
+        {
+            "name": "Main Courses",
+            "items": [
+                {
+                    "name": "Grilled Salmon",
+                    "price": 24.99,
+                    "description": "Fresh salmon fillet with seasonal vegetables"
+                },
+                {
+                    "name": "Pasta Carbonara",
+                    "price": 18.99,
+                    "description": "Classic pasta with creamy sauce, pancetta, and parmesan"
+                },
+                {
+                    "name": "Chicken Marsala",
+                    "price": 21.99,
+                    "description": "Chicken breast in mushroom marsala wine sauce"
+                }
+            ]
+        },
+        {
+            "name": "Desserts",
+            "items": [
+                {
+                    "name": "Tiramisu",
+                    "price": 8.99,
+                    "description": "Classic Italian coffee-flavored dessert"
+                },
+                {
+                    "name": "Chocolate Cake",
+                    "price": 7.99,
+                    "description": "Rich chocolate layer cake with ganache"
+                },
+                {
+                    "name": "Cheesecake",
+                    "price": 8.99,
+                    "description": "New York style cheesecake with berry compote"
+                }
+            ]
+        }
+    ]
+}

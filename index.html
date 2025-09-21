@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant QR Menu</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+    {% if site.show_staging_banner %}
+    <div class="staging-banner">
+        🚧 STAGING ENVIRONMENT - This is a test version of the menu 🚧
+    </div>
+    {% endif %}
+    
+    <div class="container">
+        <h1>Scan QR Code to View Menu</h1>
+        <div id="qrcode"></div>
+        <p>Point your camera at the QR code to view our menu!</p>
+        
+        <!-- Menu Link Feature -->
+        <div class="menu-link-section">
+            <p class="menu-link-text">Can't scan the QR code?</p>
+            <a href="menu.html" class="menu-link-button" id="menuLinkButton">
+                <span class="menu-icon">🍽️</span>
+                View Menu Online
+            </a>
+        </div>
+        
+        {% if site.staging %}
+        <p><em>Note: This is the staging version for testing.</em></p>
+        {% endif %}
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
