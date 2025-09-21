@@ -1,24 +1,21 @@
-name: Build and Deploy Staging Branch
+name: Deploy Staging Branch
 
 on:
   push:
     branches:
-      - develop  # Staging deployment from develop branch
+      - develop
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 concurrency:
-  group: "staging-pages"
+  group: "staging"
   cancel-in-progress: true
 
 jobs:
-  # Build and deploy staging to gh-pages-staging branch for preview
   build-and-deploy-staging:
     runs-on: ubuntu-latest
     steps:
@@ -26,54 +23,63 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: develop
-          fetch-depth: 0
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      
-      - name: Update config for staging
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Jekyll config for staging
         run: |
-          # Add staging indicator and environment
-          echo "staging: true" >> _config.yml
-          echo "environment: staging" >> _config.yml
-          echo "show_staging_banner: true" >> _config.yml
-          echo "baseurl: \"/lacostacocina\"" >> _config.yml
-          echo "url: \"https://edwinjlagoa-hub.github.io\"" >> _config.yml
-      
+          # Create staging-specific config
+          cp _config.yml _config_staging.yml
+          echo "" >> _config_staging.yml
+          echo "# Staging Environment Configuration" >> _config_staging.yml
+          echo "staging: true" >> _config_staging.yml
+          echo "environment: staging" >> _config_staging.yml
+          echo "show_staging_banner: true" >> _config_staging.yml
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
-          bundler-cache: true
-      
-      - name: Create Gemfile if not exists
+          bundler-cache: false
+
+      - name: Install Jekyll and dependencies
         run: |
-          if [ ! -f Gemfile ]; then
-            echo 'source "https://rubygems.org"' > Gemfile
-            echo 'gem "jekyll", "~> 4.3.0"' >> Gemfile
-            echo 'gem "minima", "~> 2.5"' >> Gemfile
-            echo 'gem "jekyll-feed", "~> 0.12"' >> Gemfile
-            echo 'gem "jekyll-sitemap"' >> Gemfile
-            echo 'gem "jekyll-seo-tag"' >> Gemfile
+          gem install jekyll bundler
+          if [ -f Gemfile ]; then
+            bundle install
           fi
-      
-      - name: Install dependencies
-        run: bundle install
-      
-      - name: Build Jekyll site
-        run: bundle exec jekyll build --destination ./_site
+
+      - name: Build Jekyll site for staging
+        run: |
+          if [ -f Gemfile ]; then
+            bundle exec jekyll build --config _config_staging.yml --destination ./_site
+          else
+            jekyll build --config _config_staging.yml --destination ./_site
+          fi
         env:
           JEKYLL_ENV: staging
-      
-      - name: Deploy to gh-pages-staging branch
+
+      - name: Deploy to staging branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
-          publish_branch: gh-pages-staging
+          publish_branch: staging-site
           force_orphan: true
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy staging site from ${{ github.sha }}'
+          commit_message: 'Deploy staging: ${{ github.event.head_commit.message }}'
+
+      - name: Display staging info
+        run: |
+          echo "✅ Staging deployment completed!"
+          echo ""
+          echo "� Access your staging site:"
+          echo "   Branch: staging-site"
+          echo "   Files: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
+          echo ""
+          echo "📝 To view the site, you can:"
+          echo "   1. Download the staging-site branch files"
+          echo "   2. Serve locally with: python -m http.server 8000"
+          echo "   3. Or enable GitHub Pages for staging-site branch"
+          echo ""
+          echo "� Latest commit: ${{ github.sha }}"
