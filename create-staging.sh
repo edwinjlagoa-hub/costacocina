@@ -1,47 +1,49 @@
 #!/bin/bash
 
-# Simple Staging Deployment Script
-# This creates a staging version without Jekyll processing
+# Local Testing File Creator
+# This creates local testing files without complex dependencies
 
-echo "🚀 Creating staging version..."
+echo "🧪 Creating local testing version..."
 
-# Create staging directory
-mkdir -p staging-temp
+# Create local testing directory
+mkdir -p local-testing
 
 # Copy files
-cp index.html staging-temp/
-cp menu.html staging-temp/  
-cp menu.js staging-temp/
-cp menu-data.json staging-temp/
-cp styles.css staging-temp/
-cp menu-styles.css staging-temp/
-cp script.js staging-temp/
+cp index.html local-testing/
+cp menu.html local-testing/  
+cp menu.js local-testing/
+cp menu-data.json local-testing/
+cp styles.css local-testing/
+cp menu-styles.css local-testing/
+cp script.js local-testing/
 
-# Create staging version of index.html without Jekyll
-cd staging-temp
-sed -i '' 's/{% if site.show_staging_banner %}/<!-- STAGING BANNER START -->/g' index.html
-sed -i '' 's/{% endif %}/<!-- STAGING BANNER END -->/g' index.html
+# Create testing version of index.html without Jekyll
+cd local-testing
+sed -i '' 's/{% if site.show_staging_banner %}/<!-- LOCAL TESTING BANNER START -->/g' index.html
+sed -i '' 's/{% endif %}/<!-- LOCAL TESTING BANNER END -->/g' index.html
 sed -i '' 's/{% if site.staging %}//g' index.html
 
-# Add staging banner directly
+# Add testing banner directly
 sed -i '' 's/<body>/<body>\
     <div class="staging-banner">\
-        🚧 STAGING ENVIRONMENT - This is a test version of the menu 🚧\
+        🧪 LOCAL TESTING - This is a development version\
     <\/div>/g' index.html
 
-# Add staging note
+# Add testing note
 sed -i '' 's/<\/div>$/&\
-        <p><em>Note: This is the staging version for testing.<\/em><\/p>/g' index.html
+        <p><em>Note: This is the local testing version.<\/em><\/p>/g' index.html
 
-# Create CNAME for staging
-echo "stage.lacostacocina.com" > CNAME
-
-echo "✅ Staging files prepared in staging-temp/"
-echo "📁 Files ready for deployment"
+echo "✅ Local testing files prepared in local-testing/"
+echo "📁 Files ready for local development"
 echo ""
 echo "🌐 To serve locally:"
-echo "   cd staging-temp && python3 -m http.server 8000"
+echo "   cd local-testing && python3 -m http.server 8000"
 echo ""
-echo "🔗 Or upload to any static hosting service"
+echo "🔗 Then open: http://localhost:8000"
+echo ""
+echo "🚀 When ready, deploy to production:"
+echo "   1. Test everything works locally"
+echo "   2. Merge develop → main"  
+echo "   3. Production auto-deploys to https://lacostacocina.com"
 
 cd ..

@@ -1,34 +1,34 @@
 #!/bin/bash
 
-# Staging Environment Access Script for La Costa Cocina
-# This script helps you access and test the staging environment
+# Local Testing Script for La Costa Cocina
+# This script helps you test changes locally before deploying to production
 
-echo "🚀 La Costa Cocina - Staging Environment Access"
-echo "================================================"
+echo "🏠 La Costa Cocina - Local Testing"
+echo "=================================="
 echo ""
 
-# Function to serve staging locally
-serve_staging() {
-    echo "📥 Checking out staging-site branch..."
+# Function to serve locally
+serve_local() {
+    echo "📥 Downloading latest develop branch for local testing..."
     
-    # Create a temporary directory for staging
-    STAGING_DIR="staging-temp"
+    # Create a temporary directory for local testing
+    LOCAL_DIR="local-testing"
     
-    if [ -d "$STAGING_DIR" ]; then
-        rm -rf "$STAGING_DIR"
+    if [ -d "$LOCAL_DIR" ]; then
+        rm -rf "$LOCAL_DIR"
     fi
     
-    # Clone the staging branch
-    git clone --single-branch --branch staging-site https://github.com/edwinjlagoa-hub/lacostacocina.git "$STAGING_DIR"
+    # Clone the develop branch
+    git clone --single-branch --branch develop https://github.com/edwinjlagoa-hub/lacostacocina.git "$LOCAL_DIR"
     
     if [ $? -eq 0 ]; then
-        echo "✅ Staging files downloaded successfully!"
+        echo "✅ Files downloaded successfully!"
         echo ""
         echo "🌐 Starting local server on http://localhost:8000"
         echo "   Press Ctrl+C to stop the server"
         echo ""
         
-        cd "$STAGING_DIR"
+        cd "$LOCAL_DIR"
         
         # Try to serve with Python 3, then Python 2, then Node.js
         if command -v python3 &> /dev/null; then
@@ -44,34 +44,32 @@ serve_staging() {
         
         # Cleanup
         cd ..
-        rm -rf "$STAGING_DIR"
+        rm -rf "$LOCAL_DIR"
     else
-        echo "❌ Failed to download staging files. Make sure staging branch exists."
+        echo "❌ Failed to download files. Please check your internet connection."
     fi
 }
 
-# Function to show staging info
+# Function to show info
 show_info() {
-    echo "📋 Staging Environment Information:"
+    echo "📋 Local Testing Information:"
     echo ""
-    echo "🌐 Staging URL: https://stage.lacostacocina.com"
-    echo "🔗 GitHub Branch: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
+    echo "🌐 Production URL: https://lacostacocina.com"
+    echo "🔗 GitHub Repository: https://github.com/edwinjlagoa-hub/lacostacocina"
     echo "📁 Local Testing: Run this script with 'serve' option"
-    echo "🔄 Auto-Deploy: Pushes to 'develop' branch trigger staging updates"
-    echo ""
-    echo "⚙️  DNS Setup Required:"
-    echo "   Add CNAME record: stage.lacostacocina.com → edwinjlagoa-hub.github.io"
+    echo "🔄 Workflow: develop locally → test locally → deploy to production"
     echo ""
     echo "Commands:"
-    echo "  ./staging-access.sh serve    - Download and serve staging locally"
+    echo "  ./staging-access.sh serve    - Download and serve latest develop branch locally"
     echo "  ./staging-access.sh info     - Show this information"
+    echo "  ./create-staging.sh          - Create local testing files manually"
     echo ""
 }
 
 # Main script logic
 case "${1:-info}" in
     "serve")
-        serve_staging
+        serve_local
         ;;
     "info")
         show_info
