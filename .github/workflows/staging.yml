@@ -39,31 +39,28 @@ jobs:
           echo "show_staging_banner: true" >> _config_staging.yml
           echo "url: \"https://stage.lacostacocina.com\"" >> _config_staging.yml
           echo "baseurl: \"\"" >> _config_staging.yml
+          
+      - name: Setup Ruby and Jekyll
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: false
+          
+      - name: Install Jekyll and dependencies
+        run: |
+          gem install jekyll bundler
+          bundle init
+          echo 'gem "jekyll", "~> 4.3.0"' >> Gemfile
+          echo 'gem "jekyll-feed"' >> Gemfile
+          bundle install
 
       - name: Create CNAME for staging subdomain
         run: |
           echo "stage.lacostacocina.com" > CNAME
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          bundler-cache: false
-
-      - name: Install Jekyll and dependencies
-        run: |
-          gem install jekyll bundler
-          if [ -f Gemfile ]; then
-            bundle install
-          fi
-
       - name: Build Jekyll site for staging
         run: |
-          if [ -f Gemfile ]; then
-            bundle exec jekyll build --config _config_staging.yml --destination ./_site
-          else
-            jekyll build --config _config_staging.yml --destination ./_site
-          fi
+          bundle exec jekyll build --config _config_staging.yml --destination ./_site
         env:
           JEKYLL_ENV: staging
 
