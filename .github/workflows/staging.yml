@@ -32,10 +32,11 @@ jobs:
           enablement: true
       - name: Update config for staging
         run: |
-          # Update baseurl for staging environment
-          sed -i 's|baseurl: "/lacostacocina"|baseurl: "/lacostacocina-staging"|g' _config.yml
-          # Add staging indicator
+          # Add staging indicator and environment
           echo "staging: true" >> _config.yml
+          echo "environment: staging" >> _config.yml
+          # Add staging banner notification
+          echo "show_staging_banner: true" >> _config.yml
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
@@ -47,6 +48,17 @@ jobs:
           name: staging-site
           path: ./_site
 
-  # Note: For now, this builds the staging site but doesn't deploy to a separate URL
-  # You can extend this to deploy to a staging subdomain or separate repository
-  # For example: deploy to a separate repository named "lacostacocina-staging"
+  # Deploy staging to the same GitHub Pages but from develop branch
+  deploy-staging:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-staging
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Deploy to GitHub Pages (Staging)
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: staging-site

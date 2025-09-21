@@ -8,10 +8,19 @@
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </head>
 <body>
+    {% if site.show_staging_banner %}
+    <div class="staging-banner">
+        🚧 STAGING ENVIRONMENT - This is a test version of the menu 🚧
+    </div>
+    {% endif %}
+    
     <div class="container">
         <h1>Scan QR Code to View Menu</h1>
         <div id="qrcode"></div>
         <p>Point your camera at the QR code to view our menu!</p>
+        {% if site.staging %}
+        <p><em>Note: This is the staging version for testing.</em></p>
+        {% endif %}
     </div>
     <script src="script.js"></script>
 </body>
