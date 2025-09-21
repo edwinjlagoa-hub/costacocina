@@ -54,9 +54,13 @@ serve_staging() {
 show_info() {
     echo "📋 Staging Environment Information:"
     echo ""
+    echo "🌐 Staging URL: https://stage.lacostacocina.com"
     echo "🔗 GitHub Branch: https://github.com/edwinjlagoa-hub/lacostacocina/tree/staging-site"
     echo "📁 Local Testing: Run this script with 'serve' option"
     echo "🔄 Auto-Deploy: Pushes to 'develop' branch trigger staging updates"
+    echo ""
+    echo "⚙️  DNS Setup Required:"
+    echo "   Add CNAME record: stage.lacostacocina.com → edwinjlagoa-hub.github.io"
     echo ""
     echo "Commands:"
     echo "  ./staging-access.sh serve    - Download and serve staging locally"
