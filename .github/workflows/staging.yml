@@ -1,4 +1,4 @@
-name: Deploy to Staging (GitHub Pages - develop branch)
+name: Build and Deploy Staging Branch
 
 on:
   push:
@@ -18,47 +18,62 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build job for staging
-  build-staging:
+  # Build and deploy staging to gh-pages-staging branch for preview
+  build-and-deploy-staging:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
         with:
           ref: develop
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          enablement: true
+          node-version: '18'
+      
       - name: Update config for staging
         run: |
           # Add staging indicator and environment
           echo "staging: true" >> _config.yml
           echo "environment: staging" >> _config.yml
-          # Add staging banner notification
           echo "show_staging_banner: true" >> _config.yml
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
+          echo "baseurl: \"/lacostacocina\"" >> _config.yml
+          echo "url: \"https://edwinjlagoa-hub.github.io\"" >> _config.yml
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          source: ./
-          destination: ./_site
-      - name: Upload staging artifact
-        uses: actions/upload-pages-artifact@v3
+          ruby-version: '3.1'
+          bundler-cache: true
+      
+      - name: Create Gemfile if not exists
+        run: |
+          if [ ! -f Gemfile ]; then
+            echo 'source "https://rubygems.org"' > Gemfile
+            echo 'gem "jekyll", "~> 4.3.0"' >> Gemfile
+            echo 'gem "minima", "~> 2.5"' >> Gemfile
+            echo 'gem "jekyll-feed", "~> 0.12"' >> Gemfile
+            echo 'gem "jekyll-sitemap"' >> Gemfile
+            echo 'gem "jekyll-seo-tag"' >> Gemfile
+          fi
+      
+      - name: Install dependencies
+        run: bundle install
+      
+      - name: Build Jekyll site
+        run: bundle exec jekyll build --destination ./_site
+        env:
+          JEKYLL_ENV: staging
+      
+      - name: Deploy to gh-pages-staging branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: staging-site
-          path: ./_site
-
-  # Deploy staging to the same GitHub Pages but from develop branch
-  deploy-staging:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build-staging
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - name: Deploy to GitHub Pages (Staging)
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: staging-site
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages-staging
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy staging site from ${{ github.sha }}'
