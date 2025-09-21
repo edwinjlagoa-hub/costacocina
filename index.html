@@ -18,6 +18,16 @@
         <h1>Scan QR Code to View Menu</h1>
         <div id="qrcode"></div>
         <p>Point your camera at the QR code to view our menu!</p>
+        
+        <!-- Menu Link Feature -->
+        <div class="menu-link-section">
+            <p class="menu-link-text">Can't scan the QR code?</p>
+            <a href="menu.html" class="menu-link-button" id="menuLinkButton">
+                <span class="menu-icon">🍽️</span>
+                View Menu Online
+            </a>
+        </div>
+        
         {% if site.staging %}
         <p><em>Note: This is the staging version for testing.</em></p>
         {% endif %}
