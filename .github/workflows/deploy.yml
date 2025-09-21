@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (Production)
 
 on:
   push:
@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build job
+  # Build job - Deploy static files without Jekyll processing
   build:
     runs-on: ubuntu-latest
     steps:
@@ -28,15 +28,12 @@ jobs:
         uses: actions/configure-pages@v4
         with:
           enablement: true
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
+      - name: Create .nojekyll file
+        run: touch .nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./_site
+          path: .
 
   # Deployment job
   deploy:
